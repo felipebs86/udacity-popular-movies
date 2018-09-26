@@ -5,7 +5,7 @@
     <string name="description_poster">poster</string>
     <string name="preference_sort">preferenceSort</string>
     <string name="sort_popular">popular</string>
-    <string name="error_message">Verifique sua conexão com a internet e tente novamente</string>
+    <string name="error_message">Ocorreu um erro ao buscar os filmes, tente novamente.</string>
     <string name="label_release_date">Data de lançamento:</string>
     <string name="label_poster">Poster do filme:</string>
     <string name="label_vote_average">Média de avaliações:</string>

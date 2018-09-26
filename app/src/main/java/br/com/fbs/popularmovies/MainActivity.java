@@ -3,7 +3,10 @@ package br.com.fbs.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -27,10 +30,10 @@ import br.com.fbs.popularmovies.utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    MovieDto[] moviesDataFromJson;
-    GridView mGridView;
-    ProgressBar progressBarLoading;
-    TextView textViewError;
+    private MovieDto[] moviesDataFromJson;
+    private GridView mGridView;
+    private ProgressBar progressBarLoading;
+    private TextView textViewError;
 
 
     @Override
@@ -63,9 +66,36 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void makeFilmQuery(String sort) {
+    private void makeFilmQuery(final String sort) {
         URL searchUrl = NetworkUtils.buildUrlForFilms(sort);
+        if (!hasConecction()) {
+            View view = findViewById(R.id.gv_movies);
+            Snackbar snackbar = Snackbar.make(view, getString(R.string.error_message), Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("Recarregar", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    makeFilmQuery(sort);
+                }
+            });
+            snackbar.show();
+
+            return;
+        }
+
         new FilmQueryTask().execute(searchUrl);
+    }
+
+    private boolean hasConecction() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
+
+        if (networkInfo == null) {return false;}
+        if (!networkInfo.isConnected()) {return false;}
+        if (!networkInfo.isAvailable()) {return false;}
+
+        return true;
     }
 
     @Override
