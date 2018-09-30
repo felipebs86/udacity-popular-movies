@@ -1,12 +1,13 @@
 package br.com.fbs.popularmovies.dto;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by felipe on 21/09/18.
  */
 
-public class MovieDto implements Serializable {
+public class MovieDto implements Parcelable {
     private String mTitle;
     private String mPosterPath;
     private String mSynopsis;
@@ -15,6 +16,30 @@ public class MovieDto implements Serializable {
 
     public MovieDto() {
     }
+
+    protected MovieDto(Parcel in) {
+        mTitle = in.readString();
+        mPosterPath = in.readString();
+        mSynopsis = in.readString();
+        if (in.readByte() == 0) {
+            mVoteAverage = null;
+        } else {
+            mVoteAverage = in.readDouble();
+        }
+        mReleaseDate = in.readString();
+    }
+
+    public static final Creator<MovieDto> CREATOR = new Creator<MovieDto>() {
+        @Override
+        public MovieDto createFromParcel(Parcel in) {
+            return new MovieDto(in);
+        }
+
+        @Override
+        public MovieDto[] newArray(int size) {
+            return new MovieDto[size];
+        }
+    };
 
     public void setTitle(String Title) {
         mTitle = Title;
@@ -37,8 +62,7 @@ public class MovieDto implements Serializable {
     }
 
     public String getPosterPath() {
-        final String POSTER_BASE_URL = "https://image.tmdb.org/t/p/w185";
-        return POSTER_BASE_URL + mPosterPath;
+        return String.format("%s%s", "https://image.tmdb.org/t/p/w185", mPosterPath);
     }
 
     public String getSynopsis() {
@@ -51,4 +75,22 @@ public class MovieDto implements Serializable {
 
     public String getReleaseDate() { return mReleaseDate; }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mTitle);
+        dest.writeString(mPosterPath);
+        dest.writeString(mSynopsis);
+        if (mVoteAverage == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(mVoteAverage);
+        }
+        dest.writeString(mReleaseDate);
+    }
 }

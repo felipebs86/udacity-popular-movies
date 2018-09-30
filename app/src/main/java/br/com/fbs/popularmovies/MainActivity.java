@@ -24,13 +24,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.fbs.popularmovies.dto.MovieDto;
 import br.com.fbs.popularmovies.utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MovieDto[] moviesDataFromJson;
+    private List<MovieDto> moviesDataFromJson;
     private GridView mGridView;
     private ProgressBar progressBarLoading;
     private TextView textViewError;
@@ -169,25 +171,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private MovieDto[] getMoviesDataFromJson(String receiptJson) throws JSONException {
+    private List<MovieDto> getMoviesDataFromJson(String receiptJson) throws JSONException {
         JSONObject moviesJson = new JSONObject(receiptJson);
         JSONArray resultsArray = moviesJson.getJSONArray("results");
 
-        MovieDto[] movies = new MovieDto[resultsArray.length()];
+        List<MovieDto> movieDtos = new ArrayList<>();
 
         for (int i = 0; i < resultsArray.length(); i++) {
-            movies[i] = new MovieDto();
+            MovieDto movieDto = new MovieDto();
 
             JSONObject movieInfo = resultsArray.getJSONObject(i);
 
-            movies[i].setTitle(movieInfo.getString("title"));
-            movies[i].setPosterPath(movieInfo.getString("poster_path"));
-            movies[i].setSynopsis(movieInfo.getString("overview"));
-            movies[i].setVoteAverage(movieInfo.getDouble("vote_average"));
-            movies[i].setReleaseDate(movieInfo.getString("release_date"));
+            movieDto.setTitle(movieInfo.optString("title"));
+            movieDto.setPosterPath(movieInfo.optString("poster_path"));
+            movieDto.setSynopsis(movieInfo.optString("overview"));
+            movieDto.setVoteAverage(movieInfo.optDouble("vote_average"));
+            movieDto.setReleaseDate(movieInfo.optString("release_date"));
+            movieDtos.add(movieDto);
         }
 
-        return movies;
+        return movieDtos;
     }
 
     private void showGridFilms() {

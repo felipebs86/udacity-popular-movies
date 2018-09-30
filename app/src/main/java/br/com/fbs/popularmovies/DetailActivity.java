@@ -12,12 +12,13 @@ import br.com.fbs.popularmovies.dto.MovieDto;
 
 public class DetailActivity extends AppCompatActivity {
 
-    MovieDto movieDto;
-    TextView title;
-    TextView releaseDate;
-    TextView voteAverage;
-    TextView synopsis;
-    ImageView poster;
+    private final String INTENT_EXTRAS = "movieDetails";
+    private MovieDto movieDto;
+    private TextView title;
+    private TextView releaseDate;
+    private TextView voteAverage;
+    private TextView synopsis;
+    private ImageView poster;
 
 
     @Override
@@ -32,8 +33,8 @@ public class DetailActivity extends AppCompatActivity {
         poster = findViewById(R.id.iv_detail_poster);
 
         Intent intent = getIntent();
-        if (intent.hasExtra("movieDetails")) {
-            movieDto = (MovieDto) intent.getSerializableExtra("movieDetails");
+        if (intent.hasExtra(INTENT_EXTRAS)) {
+            movieDto = intent.getParcelableExtra(INTENT_EXTRAS);
 
             title.setText(movieDto.getTitle());
             releaseDate.setText(movieDto.getReleaseDate());

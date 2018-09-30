@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+import br.com.fbs.popularmovies.BuildConfig;
+
 /**
  * Created by felipe on 20/09/18.
  */
@@ -18,7 +20,7 @@ public class NetworkUtils {
     private final static String PARAM_LANGUAGE = "language";
     private final static String LANGUAGE_PT_BR = "pt-BR";
     private final static String PARAM_KEY = "api_key";
-    private final static String API_KEY = "<<INSERIR CHAVE DE ACESSO>>";
+    private final static String API_KEY = BuildConfig.API_KEY;
 
     public static URL buildUrlForFilms(String query) {
         Uri builtUri = Uri.parse(BASE_MOVIE_URL + query).buildUpon()

@@ -8,6 +8,8 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import br.com.fbs.popularmovies.dto.MovieDto;
 
 /**
@@ -16,29 +18,29 @@ import br.com.fbs.popularmovies.dto.MovieDto;
 
 class ImageAdapter extends BaseAdapter {
     private final Context mContext;
-    private final MovieDto[] mMovies;
+    private final List<MovieDto> mMovies;
 
-    public ImageAdapter(Context context, MovieDto[] movies) {
+    public ImageAdapter(Context context, List<MovieDto> movies) {
         mContext = context;
         mMovies = movies;
     }
 
     @Override
     public int getCount() {
-        if (mMovies == null || mMovies.length == 0) {
+        if (mMovies == null || mMovies.size() == 0) {
             return -1;
         }
 
-        return mMovies.length;
+        return mMovies.size();
     }
 
     @Override
     public MovieDto getItem(int position) {
-        if (mMovies == null || mMovies.length == 0) {
+        if (mMovies == null || mMovies.size() == 0) {
             return null;
         }
 
-        return mMovies[position];
+        return mMovies.get(position);
     }
 
     @Override
@@ -58,7 +60,7 @@ class ImageAdapter extends BaseAdapter {
         }
 
         Picasso.with(mContext)
-                .load(mMovies[position].getPosterPath())
+                .load(mMovies.get(position).getPosterPath())
                 .resize(185, 278)
                 .into(imageView);
 
